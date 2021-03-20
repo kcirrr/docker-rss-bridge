@@ -5,7 +5,8 @@ RUN apk add --no-cache \
         curl \
         tar \
         xz \
-        openssl
+        openssl \
+    && c_rehash
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN mkdir -p /var/www/html/ \
