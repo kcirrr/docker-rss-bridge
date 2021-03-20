@@ -8,7 +8,6 @@ RUN apk add --no-cache \
         openssl \
     && c_rehash
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN mkdir -p /var/www/html/ \
     && curl -SL https://github.com/RSS-Bridge/rss-bridge/archive/master.tar.gz \
     | tar -xzC /var/www/html/ --strip-components=1
