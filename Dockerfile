@@ -23,7 +23,7 @@ RUN set -xe \
     && apk add --no-cache --update --virtual .phpize-deps $PHPIZE_DEPS \
     && apk add --no-cache --update --virtual .memcached-deps $MEMCACHED_DEPS \
     && pecl install memcached \
-    && docker-php-ext-enable igbinary memcached \
+    && docker-php-ext-enable memcached \
     && rm -rf /usr/share/php7 \
     && rm -rf /tmp/* \
     && apk del .memcached-deps .phpize-deps
