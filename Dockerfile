@@ -1,4 +1,4 @@
-FROM ubuntu:latest AS builder
+FROM ubuntu:20.04 AS builder
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
     && apt-get install --no-install-recommends --yes \
