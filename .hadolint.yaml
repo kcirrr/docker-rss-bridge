@@ -1,0 +1,3 @@
+ignored:
+  - DL3005 # GitHub runners are using an old Hadolint version complaining about apt-get upgrade
+  - DL3008 # Version pinning
