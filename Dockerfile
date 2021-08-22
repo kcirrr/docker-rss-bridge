@@ -36,7 +36,7 @@ RUN groupadd -r "${USER}" --gid="${GID}" \
     && rm -rf /var/lib/apt/lists/* \
     && pecl install memcached \
     && docker-php-ext-enable memcached \
-    && sed -s -i -e "s/80/${PORT}/" /etc/apache2/ports.conf /etc/apache2/sites-available/*.conf
+    && sed -s -i -e "s/80/8080/" /etc/apache2/ports.conf /etc/apache2/sites-available/*.conf
 
 COPY --chown="${USER}" --from=builder /var/www/html/ .
 
