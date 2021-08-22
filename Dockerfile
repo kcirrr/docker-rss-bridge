@@ -16,10 +16,15 @@ RUN mkdir -p /var/www/html/ \
 
 FROM php:7-apache
 
-ENV APACHE_RUN_USER rssbridge
-ENV RUN_APACHE_GROUP rssbridge
+ENV USER rssbridge
+ENV UID 48373
+ENV GID 48373
+ENV PORT 8080
 
-RUN groupadd -r rssbridge && useradd --no-log-init -r -g rssbridge rssbridge
+ENV APACHE_RUN_USER "${USER}"
+ENV RUN_APACHE_GROUP "${USER}"
+
+RUN groupadd -r "${USER}" --gid="${GID}" && useradd --no-log-init -r -g "${GID}" --uid="${UID}" "${USER}"
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
     && apt-get update \
@@ -30,10 +35,10 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
     && rm -rf /var/lib/apt/lists/* \
     && pecl install memcached \
     && docker-php-ext-enable memcached \
-    && sed -s -i -e "s/80/8080/" /etc/apache2/ports.conf /etc/apache2/sites-available/*.conf
+    && sed -s -i -e "s/80/${PORT}/" /etc/apache2/ports.conf /etc/apache2/sites-available/*.conf
 
-COPY --chown=rssbridge --from=builder /var/www/html/ .
+COPY --chown="${USER}" --from=builder /var/www/html/ .
 
-USER rssbridge
+USER "${UID}"
 
-EXPOSE 8080
+EXPOSE "${PORT}"
