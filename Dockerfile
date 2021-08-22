@@ -19,14 +19,15 @@ FROM php:7-apache
 ENV USER rssbridge
 ENV UID 48373
 ENV GID 48373
-ENV PORT 8080
 
 ENV APACHE_RUN_USER "${USER}"
 ENV RUN_APACHE_GROUP "${USER}"
 
-RUN groupadd -r "${USER}" --gid="${GID}" && useradd --no-log-init -r -g "${GID}" --uid="${UID}" "${USER}"
+WORKDIR /var/www/html/
 
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
+RUN groupadd -r "${USER}" --gid="${GID}" \
+    && useradd --no-log-init -r -g "${GID}" --uid="${UID}" "${USER}" \
+    && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
     && apt-get update \
     && apt-get install --no-install-recommends --yes \
     zlib1g-dev \
@@ -41,4 +42,4 @@ COPY --chown="${USER}" --from=builder /var/www/html/ .
 
 USER "${UID}"
 
-EXPOSE "${PORT}"
+EXPOSE 8080
