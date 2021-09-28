@@ -14,11 +14,11 @@ RUN mkdir -p /var/www/html/ \
     | tar -xzC /var/www/html/ --strip-components=1
 
 
-FROM php:7-apache
+FROM php:7.4.24-apache
 
 ENV USER rssbridge
-ENV UID 48373
-ENV GID 48373
+ENV UID 1000
+ENV GID 1000
 
 ENV APACHE_RUN_USER "${USER}"
 ENV RUN_APACHE_GROUP "${USER}"
@@ -29,6 +29,7 @@ RUN groupadd -r "${USER}" --gid="${GID}" \
     && useradd --no-log-init -r -g "${GID}" --uid="${UID}" "${USER}" \
     && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
     && apt-get update \
+    && apt-get upgrade -y \
     && apt-get install --no-install-recommends --yes \
     zlib1g-dev \
     libmemcached-dev \
