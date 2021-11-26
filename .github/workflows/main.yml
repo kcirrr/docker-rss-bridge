@@ -22,13 +22,10 @@ jobs:
         name: Lint
         uses: brpaz/hadolint-action@v1.2.1
 
-  push:
+  build:
     needs: lint
     runs-on: ubuntu-latest
     steps:
-      - 
-        name: GitHub Environment Variables Action
-        uses: FranzDiebold/github-env-vars-action@v2
       -
         name: Checkout
         uses: actions/checkout@v2
