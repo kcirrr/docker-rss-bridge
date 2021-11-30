@@ -14,7 +14,7 @@ RUN mkdir -p /var/www/html/ \
     | tar -xzC /var/www/html/ --strip-components=1
 
 
-FROM php:8.0.13-apache
+FROM php:8.1.0-apache
 
 ENV USER rssbridge
 ENV UID 1000
