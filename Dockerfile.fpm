@@ -1,0 +1,58 @@
+FROM ubuntu:focal-20211006 AS builder
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update \
+    && apt-get install --no-install-recommends --yes \
+    curl \
+    ca-certificates \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && c_rehash
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN mkdir -p /var/www/html/ \
+    && curl -SL https://github.com/RSS-Bridge/rss-bridge/archive/master.tar.gz \
+    | tar -xzC /var/www/html/ --strip-components=1
+
+
+FROM alpine:3.15.0
+
+ENV USER rssbridge
+ENV UID 1000
+ENV GID 1000
+
+WORKDIR /var/www/html/
+
+RUN addgroup \
+    -S "$USER" \
+    --gid "$UID" \
+    && adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "$(pwd)" \
+    --ingroup "$USER" \
+    --no-create-home \
+    --uid "$UID" \
+    "$USER"
+
+RUN apk add --no-cache \
+    php7=7.4.27-r0 \
+    php7-fpm=7.4.27-r0 \
+    php7-curl=7.4.27-r0 \
+    php7-xml=7.4.27-r0 \
+    php7-simplexml=7.4.27-r0 \
+    php7-openssl=7.4.27-r0 \
+    php7-mbstring=7.4.27-r0 \
+    php7-json=7.4.27-r0 \
+    && chown "${USER}":"${USER}" /var/log/php7 \
+    && sed -i '/^user =/d' /etc/php7/php-fpm.d/www.conf \
+    && sed -i '/^group =/d' /etc/php7/php-fpm.d/www.conf
+
+COPY --chown="${USER}" --from=builder /var/www/html/ .
+
+USER "${UID}"
+
+EXPOSE 9000
+
+STOPSIGNAL SIGQUIT
+
+CMD ["php-fpm7", "-F"]
