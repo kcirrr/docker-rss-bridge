@@ -8,8 +8,8 @@ on:
       - 'v*.*.*'
     paths:
       - '.hadolint.yaml'
-      - 'Dockerfile'
-      - '.github/workflows/main.yml'
+      - 'Dockerfile.fpm'
+      - '.github/workflows/fpm-image.yml'
 
 jobs:
   lint:
