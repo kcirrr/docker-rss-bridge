@@ -1,4 +1,4 @@
-FROM ubuntu:focal-20220426 AS builder
+FROM ubuntu:focal-20220531 AS builder
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
     && apt-get install --no-install-recommends --yes \
